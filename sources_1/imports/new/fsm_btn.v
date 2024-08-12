@@ -3,14 +3,18 @@
 module fsm_btn(
     input clk,
     input reset,
+    input [7:0] i_rx_data,
     input btnr,
     input btnu,
     output reg o_run_on,
     output reg o_clr_on
     );
 
+
     wire w_run_stop = btnr;
     wire w_clear = btnu;
+    // wire [7:0] w_rx_data;
+    // assign w_rx_data = i_rx_data;
 
      // state has 2 state
      // state,next_state bit수 안맞춰줫다;; 
@@ -34,9 +38,9 @@ module fsm_btn(
         case(state)
         // 자기 자신으로 돌아가는 것을 안해줌
         STP_MD: begin
-            if(btnr == 1) 
+            if(btnr == 1 || i_rx_data == 8'h72) // 'r' 
                 next_state = RUN_MD;
-            else if(btnu==1)
+            else if(btnu==1 || i_rx_data == 8'h63) // 'c'
                 // clear mode는 오직 stop상태만 가능하다..
                 next_state = CLR_MD;
             else
@@ -44,7 +48,7 @@ module fsm_btn(
                 next_state = STP_MD;
         end
         RUN_MD: begin
-            if(btnr == 1'b1) 
+            if(btnr == 1'b1 || i_rx_data == 8'h73 || i_rx_data == 8'h72) // 's' 혹은 'r'
                 next_state = STP_MD;
             else
                 // 자기자신의 상태를 쭉 유지하게 해주어야함

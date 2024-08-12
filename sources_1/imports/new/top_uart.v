@@ -1,14 +1,8 @@
 `timescale 1ns / 1ps
 
-
-module top_uart_fnd(
+module top_uart(
     input clk,
     input reset,
-    input btnr,
-    input btnu,
-    output [3:0] fndCom,
-    output [7:0] fndFont,
-    // uart
     input rx,
     output tx
     );
@@ -16,17 +10,7 @@ module top_uart_fnd(
     wire w_rx_done;
     wire [7:0] w_rx_data;
 
-    top_upcnt_btn_FSM u_btn_fsm (
-        .clk(clk),
-        .reset(reset),
-        .i_rx_data(w_rx_data),
-        .btnr(btnr),
-        .btnu(btnu),
-        .fndCom(fndCom),
-        .fndFont(fndFont)
-    );
-
-    uart_idk u_uart_idk02(
+    uart_idk u_uart_idk(
         // globla signal
         .clk(clk),
         .reset(reset),
@@ -40,5 +24,4 @@ module top_uart_fnd(
         .o_rx_data(w_rx_data),
         .o_rx_done(w_rx_done)
     );
-    
 endmodule

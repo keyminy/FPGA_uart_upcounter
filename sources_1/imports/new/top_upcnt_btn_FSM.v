@@ -3,6 +3,7 @@
 module top_upcnt_btn_FSM(
     input clk,
     input reset,
+    input [7:0] i_rx_data,
     input btnr,
     input btnu,
     output [3:0] fndCom,
@@ -30,6 +31,7 @@ module top_upcnt_btn_FSM(
     fsm_btn U_fsm_wawtch(
         .clk(clk),
         .reset(reset),
+        .i_rx_data(i_rx_data),
         .btnr(w_btn_run_stop),
         .btnu(w_btn_clear),
         .o_run_on(w_run_on),
