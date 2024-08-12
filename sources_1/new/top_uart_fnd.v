@@ -20,6 +20,7 @@ module top_uart_fnd(
         .clk(clk),
         .reset(reset),
         .i_rx_data(w_rx_data),
+        .i_rx_done(w_rx_done),
         .btnr(btnr),
         .btnu(btnu),
         .fndCom(fndCom),

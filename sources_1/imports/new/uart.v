@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-module uart_idk(
+module uart(
     // global signal
     input clk,
     input reset,
