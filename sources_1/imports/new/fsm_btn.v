@@ -11,7 +11,6 @@ module fsm_btn(
     output reg o_clr_on
     );
 
-
     wire w_run_stop = btnr;
     wire w_clear = btnu;
     // wire [7:0] w_rx_data;
@@ -31,6 +30,7 @@ module fsm_btn(
     always @(posedge clk or posedge reset) begin
         if(reset) begin
             state <= STP_MD;
+            rx_data_reg <= 0;
         end else begin
             state <= next_state;
             rx_data_reg <= rx_data_next;
@@ -46,23 +46,23 @@ module fsm_btn(
         case(state)
         // 자기 자신으로 돌아가는 것을 안해줌
         STP_MD: begin
-            if(btnr == 1 || rx_data_reg == 8'h72) // 'r'
+            if(btnr == 1 || rx_data_reg == "r") // 'r'
             begin
                 next_state = RUN_MD;
                 rx_data_next = 0;
             end 
-            else if(btnu==1 || rx_data_reg == 8'h63) // 'c' 
+            else if(btnu==1 || rx_data_reg == "c") // 'c' 
             begin
                 // clear mode는 오직 stop상태만 가능하다..
                 next_state = CLR_MD;
-                rx_data_next = 0;
+                rx_data_next = 0; // race conditon
             end
             else
                 // 자기자신의 상태를 쭉 유지하게 해주어야함
                 next_state = STP_MD;
         end
         RUN_MD: begin
-            if(btnr == 1'b1 || rx_data_reg == 8'h73 || rx_data_reg == 8'h72) // 's' 혹은 'r'
+            if(btnr == 1'b1 || rx_data_reg == "s") // 's' 혹은 'r'
             begin
                 next_state = STP_MD;
                 rx_data_next = 0;

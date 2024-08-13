@@ -29,6 +29,21 @@ module top_upcnt_btn_FSM(
     . o_btn(w_btn_clear)
     );
 
+    uart u_uart_idk01(
+        // globla signal
+        .clk(clk),
+        .reset(reset),
+        // tx signal
+        .start(w_rx_done),
+        .tx_data(w_rx_data),
+        .o_txd(tx),
+        .o_tx_done(), // no connect
+        // rx signal
+        .rx(rx),
+        .o_rx_data(w_rx_data),
+        .o_rx_done(w_rx_done)
+    );
+    
     fsm_btn U_fsm_wawtch(
         .clk(clk),
         .reset(reset),
