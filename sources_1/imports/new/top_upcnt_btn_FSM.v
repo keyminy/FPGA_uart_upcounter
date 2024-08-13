@@ -21,6 +21,10 @@ module top_upcnt_btn_FSM(
 
     wire w_rx_done;
     wire [7:0] w_rx_data;
+    //fifo
+    wire w_rx_fifo_empty;
+    wire [7:0] w_rx_fifo_data;
+    
 
     uart u_uart_idk01(
         // globla signal
@@ -49,12 +53,23 @@ module top_upcnt_btn_FSM(
     .i_btn(btnu),
     . o_btn(w_btn_clear)
     );
-
+    //----------- Begin Cut here for INSTANTIATION Template ---// INST_TAG
+    fifo_generator_0 u_Rx_FIFO (
+    .clk(clk),      // input wire clk
+    .srst(reset),    // input wire srst
+    .din(w_rx_data),      // input wire [7 : 0] din
+    .wr_en(w_rx_done),  // input wire wr_en
+    .rd_en(~w_rx_fifo_empty),  // input wire rd_en
+    .dout(w_rx_fifo_data),    // output wire [7 : 0] dout
+    .full(),    // output wire full
+    .empty(w_rx_fifo_empty)  // output wire empty
+    );
+    // INST_TAG_END ------ End INSTANTIATION Template ---------
     fsm_btn U_fsm_wawtch(
         .clk(clk),
         .reset(reset),
-        .i_rx_data(w_rx_data),
-        .i_rx_done(w_rx_done),
+        .i_rx_data(w_rx_fifo_data),
+        .i_rx_done(~w_rx_fifo_empty),
         .btnr(w_btn_run_stop),
         .btnu(w_btn_clear),
         .o_run_on(w_run_on),
