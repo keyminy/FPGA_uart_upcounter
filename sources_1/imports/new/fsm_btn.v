@@ -23,12 +23,9 @@ module fsm_btn(
     reg [1:0] next_state; //상태를 저장하는 레지스터
     reg [7:0] rx_data_reg,rx_data_next;
 
-
-
     parameter STP_MD = 2'b00;
     parameter RUN_MD = 2'b01; 
     parameter CLR_MD = 2'b10;
-
 
     // state register
     always @(posedge clk or posedge reset) begin
@@ -40,9 +37,9 @@ module fsm_btn(
         end
     end
 
-
     // next state Combination logic
     always @(*) begin
+        rx_data_next = rx_data_reg;
         if(i_rx_done) begin
             rx_data_next = i_rx_data;
         end
@@ -54,16 +51,22 @@ module fsm_btn(
                 next_state = RUN_MD;
                 rx_data_next = 0;
             end 
-            else if(btnu==1 || i_rx_data == 8'h63) // 'c'
+            else if(btnu==1 || rx_data_reg == 8'h63) // 'c' 
+            begin
                 // clear mode는 오직 stop상태만 가능하다..
                 next_state = CLR_MD;
+                rx_data_next = 0;
+            end
             else
                 // 자기자신의 상태를 쭉 유지하게 해주어야함
                 next_state = STP_MD;
         end
         RUN_MD: begin
-            if(btnr == 1'b1 || i_rx_data == 8'h73 || i_rx_data == 8'h72) // 's' 혹은 'r'
+            if(btnr == 1'b1 || rx_data_reg == 8'h73 || rx_data_reg == 8'h72) // 's' 혹은 'r'
+            begin
                 next_state = STP_MD;
+                rx_data_next = 0;
+            end
             else
                 // 자기자신의 상태를 쭉 유지하게 해주어야함
                 next_state = RUN_MD;

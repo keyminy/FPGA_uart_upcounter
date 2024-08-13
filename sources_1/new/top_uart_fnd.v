@@ -27,7 +27,7 @@ module top_uart_fnd(
         .fndFont(fndFont)
     );
 
-    uart_idk u_uart_idk02(
+    uart u_uart_idk01(
         // globla signal
         .clk(clk),
         .reset(reset),
