@@ -21,6 +21,7 @@ module fsm_btn(
     reg [1:0] state;
     reg [1:0] next_state; //상태를 저장하는 레지스터
     reg [7:0] rx_data_reg,rx_data_next;
+    reg rx_done_reg,rx_done_next;
 
     parameter STP_MD = 2'b00;
     parameter RUN_MD = 2'b01; 
@@ -31,16 +32,19 @@ module fsm_btn(
         if(reset) begin
             state <= STP_MD;
             rx_data_reg <= 0;
+            rx_done_reg <= 0;
         end else begin
             state <= next_state;
             rx_data_reg <= rx_data_next;
+            rx_done_reg <= rx_done_next;
         end
     end
 
     // next state Combination logic
     always @(*) begin
         rx_data_next = rx_data_reg;
-        if(i_rx_done) begin
+        rx_done_next = i_rx_done;
+        if(rx_done_reg==1'b1) begin
             rx_data_next = i_rx_data;
         end
         case(state)

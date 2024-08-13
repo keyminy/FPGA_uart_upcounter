@@ -59,7 +59,8 @@ module top_upcnt_btn_FSM(
     .srst(reset),    // input wire srst
     .din(w_rx_data),      // input wire [7 : 0] din
     .wr_en(w_rx_done),  // input wire wr_en
-    .rd_en(~w_rx_fifo_empty),  // input wire rd_en
+    // .rd_en(~w_rx_fifo_empty),  // input wire rd_en
+    .rd_en(1'b1),  // input wire rd_en // 1로 강제로 vcc연결
     .dout(w_rx_fifo_data),    // output wire [7 : 0] dout
     .full(),    // output wire full
     .empty(w_rx_fifo_empty)  // output wire empty
