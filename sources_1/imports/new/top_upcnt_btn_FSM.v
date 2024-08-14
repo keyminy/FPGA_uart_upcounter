@@ -24,6 +24,7 @@ module top_upcnt_btn_FSM(
     //fifo
     wire w_rx_fifo_empty;
     wire [7:0] w_rx_fifo_data;
+    wire w_rx_fifo_rd_en;
     
 
     uart u_uart_idk01(
@@ -60,7 +61,7 @@ module top_upcnt_btn_FSM(
     .din(w_rx_data),      // input wire [7 : 0] din
     .wr_en(w_rx_done),  // input wire wr_en
     // .rd_en(~w_rx_fifo_empty),  // input wire rd_en
-    .rd_en(1'b1),  // input wire rd_en // 1로 강제로 vcc연결
+    .rd_en(w_rx_fifo_rd_en),  // input wire rd_en, u_fsm_watch output으로부터 나온 rd_en신호 사용
     .dout(w_rx_fifo_data),    // output wire [7 : 0] dout
     .full(),    // output wire full
     .empty(w_rx_fifo_empty)  // output wire empty
@@ -73,6 +74,7 @@ module top_upcnt_btn_FSM(
         .i_rx_done(~w_rx_fifo_empty),
         .btnr(w_btn_run_stop),
         .btnu(w_btn_clear),
+        .rd_en(w_rx_fifo_rd_en), // output?
         .o_run_on(w_run_on),
         .o_clr_on(w_clr_on)
     );
